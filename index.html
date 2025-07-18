@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Content Analysis</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN for interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom styles to override or enhance Tailwind */
+        body {
+            font-family: 'Inter', sans-serif; /* Using Inter font as per instructions */
+            background-color: #000000; /* Netflix black background */
+            color: #FFFFFF; /* White text for contrast */
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 400px; /* Fixed height for consistency, will be responsive width */
+            width: 90%; /* Responsive width */
+            max-width: 800px; /* Max width for larger screens */
+            background-color: #1a1a1a; /* Slightly lighter black for chart background */
+            border-radius: 10px; /* Rounded corners for the container */
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3); /* Subtle red shadow */
+        }
+        h1, h2, h3 {
+            color: #E50914; /* Netflix red for headings */
+        }
+        p {
+            color: #CCCCCC; /* Lighter white for paragraph text */
+        }
+        .section-card {
+            background-color: #141414; /* Darker background for sections */
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        /* Styles for navigation links */
+        .nav-link {
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .nav-link:hover {
+            background-color: rgba(255, 0, 0, 0.2); /* Light red on hover */
+        }
+        .nav-link.active {
+            background-color: #E50914; /* Netflix red for active link */
+            font-weight: bold;
+        }
+        /* Hide sections by default, show only the active one */
+        .page-section {
+            display: none;
+        }
+        .page-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <header class="text-center mb-10">
+        <h1 class="text-4xl sm:text-5xl font-bold mb-4">NETFLIX CONTENT ANALYSIS</h1>
+        <p class="text-lg sm:text-xl text-gray-400">By Anita Kumari Pradhan</p>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="mb-10 flex flex-wrap justify-center gap-4 text-white text-lg">
+        <a class="nav-link active" data-page="introduction">Introduction</a>
+        <a class="nav-link" data-page="data-cleaning">Data Cleaning</a>
+        <a class="nav-link" data-page="movies-across-countries">Movies by Country</a>
+        <a class="nav-link" data-page="show-type-distribution">Show Type</a>
+        <a class="nav-link" data-page="rating-wise-distribution">Rating Distribution</a>
+        <a class="nav-link" data-page="content-over-time">Content Over Time</a>
+    </nav>
+
+    <main class="max-w-4xl mx-auto">
+
+        <!-- Introduction Section -->
+        <section id="introduction" class="page-section active section-card">
+            <h2 class="text-3xl font-semibold mb-4">Introduction</h2>
+            <p class="mb-4">
+                Netflix, a popular OTT platform, is analyzed here to understand the distribution
+                of content available from a dataset sourced from Kaggle. This project focuses on
+                analyzing content by type, rating, and country. It covers overall data cleaning,
+                visualization, and an in-depth analysis of content distribution across countries,
+                age groups, and content types.
+            </p>
+        </section>
+
+        <!-- Data Cleaning and Formation Section -->
+        <section id="data-cleaning" class="page-section section-card">
+            <h2 class="text-3xl font-semibold mb-4">Data Cleaning and Formation</h2>
+            <ul class="list-disc list-inside text-gray-300">
+                <li>There were 2634 director, 825 cast, 831 country, 10 date added, 4 rating, and 3 duration values missing.</li>
+                <li>All missing values were dropped using pandas.</li>
+                <li>Duplicate rows were identified and removed.</li>
+                <li>The 'date added' column was formatted into datetime format.</li>
+                <li>Years were extracted from the 'date added' column and stored in a new column 'year added'.</li>
+            </ul>
+        </section>
+
+        <!-- Content Across Countries Chart -->
+        <section id="movies-across-countries" class="page-section section-card">
+            <h2 class="text-3xl font-semibold mb-4 text-center">Movies Across Countries</h2>
+            <div class="chart-container">
+                <canvas id="moviesAcrossCountriesChart"></canvas>
+            </div>
+            <p class="mt-4 text-gray-300 text-center">
+                This graph illustrates that the United States contributed the highest number of contents,
+                with India ranking second, followed by the UK, Japan, South Korea, and Canada.
+                The significant drop after the US indicates Netflix's strong presence in Hollywood.
+                The further drop after India suggests an ongoing expansion effort in the Indian OTT market,
+                which holds immense potential, especially after the COVID-19 pandemic.
+            </p>
+        </section>
+
+        <!-- Show Type Distribution Chart -->
+        <section id="show-type-distribution" class="page-section section-card">
+            <h2 class="text-3xl font-semibold mb-4 text-center">Netflix Show Type Distribution</h2>
+            <div class="chart-container">
+                <canvas id="showTypeDistributionChart"></canvas>
+            </div>
+            <p class="mt-4 text-gray-300 text-center">
+                This graph demonstrates that the number of movies is more than double the number of TV shows on Netflix.
+                This trend likely reflects user preferences, where there's a higher demand for movies,
+                and Netflix's content strategy aligns with this demand-supply dynamic.
+            </p>
+        </section>
+
+        <!-- Rating Wise Distribution Chart -->
+        <section id="rating-wise-distribution" class="page-section section-card">
+            <h2 class="text-3xl font-semibold mb-4 text-center">Rating Wise Distribution</h2>
+            <div class="chart-container">
+                <canvas id="ratingWiseDistributionChart"></canvas>
+            </div>
+            <p class="mt-4 text-gray-300 text-center">
+                In this graph, TV-MA ratings account for over 3000 content pieces, and TV-14 ratings
+                have approximately 2000. Following these, the number of content drastically decreases.
+                This distribution suggests that Netflix's content caters predominantly to users aged 14 and above.
+            </p>
+        </section>
+
+        <!-- Content Over Time Chart -->
+        <section id="content-over-time" class="page-section section-card">
+            <h2 class="text-3xl font-semibold mb-4 text-center">Content Over Time</h2>
+            <div class="chart-container">
+                <canvas id="contentOverTimeChart"></canvas>
+            </div>
+            <p class="mt-4 text-gray-300 text-center">
+                This graph shows a significant increase in Netflix content after 2016, coinciding with Netflix's
+                expansion into over 190 countries with multi-language content. The number of OTT users
+                drastically increased after 2019 due to the COVID-19 pandemic, leading to theater closures
+                and direct movie releases on OTT platforms. Increased competition post-2019 also prompted
+                Netflix to heavily invest in more content to attract and retain users.
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="text-center mt-10 text-gray-500 text-sm">
+        <p>&copy; 2025 Netflix Content Analysis. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Data for the charts (extracted from the PDF)
+        const data = {
+            moviesAcrossCountries: {
+                labels: ['United States', 'India', 'United Kingdom', 'Japan', 'South Korea', 'Canada', 'Spain', 'France', 'Mexico', 'Egypt'],
+                values: [2800, 980, 450, 250, 200, 180, 150, 120, 100, 80]
+            },
+            showTypeDistribution: {
+                labels: ['Movie', 'TV Show'],
+                values: [6100, 2700]
+            },
+            ratingWiseDistribution: {
+                labels: ['TV-MA', 'TV-14', 'TV-PG', 'R', 'PG-13', 'TV-Y7', 'TV-Y', 'PG', 'TV-G', 'NR', 'G', 'TV-Y7-FV', 'NC-17', 'UR'],
+                values: [3200, 2150, 880, 820, 500, 350, 320, 280, 200, 80, 50, 10, 5, 5]
+            },
+            contentOverTime: {
+                labels: ['2008', '2010', '2012', '2014', '2016', '2017', '2018', '2019', '2020'],
+                values: [10, 20, 30, 80, 400, 1200, 1800, 2000, 1850]
+            }
+        };
+
+        // Chart.js common options for Netflix theme
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false, // Hide legend for single-dataset charts
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(255, 0, 0, 0.9)', // Red tooltip background
+                    titleColor: '#FFFFFF', // White title
+                    bodyColor: '#FFFFFF', // White body
+                    borderColor: '#FFFFFF',
+                    borderWidth: 1,
+                    cornerRadius: 5,
+                    displayColors: false,
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)', // Light grid lines
+                        borderColor: '#FFFFFF'
+                    },
+                    ticks: {
+                        color: '#FFFFFF' // White labels
+                    },
+                    title: {
+                        display: true,
+                        color: '#E50914', // Red title
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)', // Light grid lines
+                        borderColor: '#FFFFFF'
+                    },
+                    ticks: {
+                        color: '#FFFFFF' // White labels
+                    },
+                    title: {
+                        display: true,
+                        color: '#E50914', // Red title
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        };
+
+        // Function to create a bar chart
+        function createBarChart(canvasId, labels, values, chartTitle, xLabel, yLabel) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            // Destroy existing chart instance if it exists to prevent re-rendering issues
+            if (Chart.getChart(canvasId)) {
+                Chart.getChart(canvasId).destroy();
+            }
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: chartTitle,
+                        data: values,
+                        backgroundColor: '#E50914', // Netflix red for bars
+                        borderColor: '#FF4545', // Slightly lighter red border
+                        borderWidth: 1,
+                        borderRadius: 5, // Rounded corners for bars
+                    }]
+                },
+                options: {
+                    ...commonChartOptions,
+                    scales: {
+                        x: {
+                            ...commonChartOptions.scales.x,
+                            title: {
+                                ...commonChartOptions.scales.x.title,
+                                text: xLabel
+                            }
+                        },
+                        y: {
+                            ...commonChartOptions.scales.y,
+                            title: {
+                                ...commonChartOptions.scales.y.title,
+                                text: yLabel
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to create a line chart
+        function createLineChart(canvasId, labels, values, chartTitle, xLabel, yLabel) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            // Destroy existing chart instance if it exists to prevent re-rendering issues
+            if (Chart.getChart(canvasId)) {
+                Chart.getChart(canvasId).destroy();
+            }
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: chartTitle,
+                        data: values,
+                        fill: false,
+                        borderColor: '#E50914', // Netflix red for line
+                        tension: 0.4, // Smooth curve
+                        pointBackgroundColor: '#FFFFFF', // White points
+                        pointBorderColor: '#E50914', // Red border for points
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                    }]
+                },
+                options: {
+                    ...commonChartOptions,
+                    scales: {
+                        x: {
+                            ...commonChartOptions.scales.x,
+                            title: {
+                                ...commonChartOptions.scales.x.title,
+                                text: xLabel
+                            }
+                        },
+                        y: {
+                            ...commonChartOptions.scales.y,
+                            title: {
+                                ...commonChartOptions.scales.y.title,
+                                text: yLabel
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to show a specific page and hide others
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+
+            // Update active class for nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`.nav-link[data-page="${pageId}"]`).classList.add('active');
+
+            // Re-render charts when their section becomes active to ensure responsiveness
+            // This is important because Chart.js might not render correctly if its container is hidden initially
+            if (pageId === 'movies-across-countries') {
+                createBarChart(
+                    'moviesAcrossCountriesChart',
+                    data.moviesAcrossCountries.labels,
+                    data.moviesAcrossCountries.values,
+                    'Number of Movies',
+                    'Country',
+                    'Number of Movies'
+                );
+            } else if (pageId === 'show-type-distribution') {
+                createBarChart(
+                    'showTypeDistributionChart',
+                    data.showTypeDistribution.labels,
+                    data.showTypeDistribution.values,
+                    'Number of Content',
+                    'Type of Content',
+                    'Number of Content'
+                );
+            } else if (pageId === 'rating-wise-distribution') {
+                createBarChart(
+                    'ratingWiseDistributionChart',
+                    data.ratingWiseDistribution.labels,
+                    data.ratingWiseDistribution.values,
+                    'Number of Content',
+                    'Type of Rating',
+                    'Number of Content'
+                );
+            } else if (pageId === 'content-over-time') {
+                createLineChart(
+                    'contentOverTimeChart',
+                    data.contentOverTime.labels,
+                    data.contentOverTime.values,
+                    'Number of Content',
+                    'Years',
+                    'Number of Content'
+                );
+            }
+        }
+
+        // Initialize charts and page display when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add event listeners to navigation links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (event) => {
+                    const pageId = event.target.dataset.page;
+                    showPage(pageId);
+                });
+            });
+
+            // Show the initial page (Introduction) and render its charts if any
+            showPage('introduction');
+        });
+    </script>
+</body>
+</html>
